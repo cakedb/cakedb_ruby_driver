@@ -52,7 +52,7 @@ class CakeDB
 
     #How much data we gotta get?
     recv_total = @server.recv(4).unpack("L>")[0]
-    puts "total is #{recv_total}"
+    #puts "total is #{recv_total}"
     if recv_total > 0
       counter = 0
       #Recive the result
