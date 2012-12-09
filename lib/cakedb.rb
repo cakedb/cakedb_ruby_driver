@@ -42,8 +42,6 @@ class CakeDB
     #Issue the query
     sid = get_sid(stream)
     if tsend 
-      puts ts
-      puts tsend
       @server.write [18,mode,sid,ts,tsend].pack("L>S>S>Q>Q>")
     else
       @server.write [10,mode,sid,ts].pack("L>S>S>Q>")
@@ -72,14 +70,16 @@ class CakeDB
 	end
 
 	#recieve the data, header says how much
-        result[counter] = @server.recv(header[1])
+	result[counter] = Hash.new
+	result[counter]["ts"] = header[0]
+        result[counter]["data"] = @server.recv(header[1])
 	
 	#Keep reading till we have everything we expect
-        while(result[counter].bytesize < header[1])
-          result[counter] += @server.recv(header[1] - resultt[counter].bytesize)
-          puts "Incomplete read: #{resultt[counter].bytesize} / #{header[1]}"
+        while(result[counter]["data"].bytesize < header[1])
+          result[counter]["data"] += @server.recv(header[1] - result[counter]["data"].bytesize)
+          puts "Incomplete read: #{result[counter]["data"].bytesize} / #{header[1]}"
 	end
-	if result[counter].bytesize != header[1]
+	if result[counter]["data"].bytesize != header[1]
           puts "Incomplete read on payload receive"
 	  puts "Raw Data: #{resultt[counter]}"  
 	  puts "Length: #{header[1]} bytes"

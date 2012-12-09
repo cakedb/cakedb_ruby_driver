@@ -7,10 +7,10 @@ require './lib/cakedb.rb'
 @conn = CakeDB.new
 #@conn.write("a","cheese")
 @conn.allSince("a", 0).each do |line|
-  puts line
+  puts line["ts"].to_s + "|" + line["data"]
 end
 
 @conn.rangeQuery("a", 0, Time.now.to_i*1000000).each do |line|
-  puts line
+  puts line["ts"].to_s + "|" + line["data"]
 end
 
